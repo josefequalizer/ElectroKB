@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+html, body {
+  direction: rtl;
+  font-family: var(--font-sans);
+  background: radial-gradient(ellipse at top, #01191d 0%, #010a0c 60%, #000304 100%);
+  color: #f3f4f6;
+  scroll-behavior: smooth;
+  min-height: 100vh;
+}
+
+/* Beautiful dark teal neon grid effects */
+.grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(16, 185, 129, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(6, 182, 212, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Immersive neon-teal cosmic glowing effects */
+.ambient-glow-top {
+  position: absolute;
+  top: -10%;
+  right: 15%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.09) 0%, rgba(6, 182, 212, 0.03) 60%, transparent 100%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-glow-center {
+  position: absolute;
+  top: 35%;
+  left: 2%;
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.07) 0%, rgba(13, 148, 136, 0.02) 60%, transparent 100%);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-glow-bottom {
+  position: absolute;
+  bottom: -5%;
+  right: 10%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.07) 0%, rgba(6, 182, 212, 0.04) 50%, transparent 100%);
+  filter: blur(110px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Glassmorphism panels inspired by the premium second image */
+.glass-panel {
+  background: rgba(1, 15, 18, 0.55);
+  backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  box-shadow: 0 16px 40px 0 rgba(0, 4, 5, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.glass-panel-accent {
+  background: rgba(1, 24, 29, 0.7);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  box-shadow: 0 16px 40px -10px rgba(6, 182, 212, 0.15), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glow-cyan {
+  filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.45));
+}
+
+.glow-emerald {
+  filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.45));
+}
