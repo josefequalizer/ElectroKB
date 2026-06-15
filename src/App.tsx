@@ -10,6 +10,15 @@ import { Product, RepairRequest, DeviceCategory, RepairStatus, CATEGORY_LABELS }
 import { INITIAL_PRODUCTS, INITIAL_REPAIR_REQUESTS } from './data/mockData';
 import { Smartphone, Laptop, Wrench, Shield, CheckCircle2, Sparkles, AlertCircle, RefreshCw, Palette, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { db } from './firebase';
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+  updateDoc
+} from 'firebase/firestore';
 
 export const App: React.FC = () => {
   // Tabs State: 'home' | 'store' | 'repair' | 'track' | 'admin'
@@ -34,27 +43,36 @@ export const App: React.FC = () => {
 
   // Initialize data from LocalStorage
   useEffect(() => {
-    const savedProducts = localStorage.getItem('electro_products');
+    const unsubscribe = onSnapshot(
+      collection(db, 'products'),
+      (snapshot) => {
+        const firebaseProducts = snapshot.docs.map((item) => ({
+          id: item.id,
+          ...item.data(),
+        })) as Product[];
+  
+        setProducts(firebaseProducts);
+      }
+    );
+  
     const savedRepairs = localStorage.getItem('electro_repairs');
     const savedAdminAuth = localStorage.getItem('electro_admin_auth');
-
-    if (savedProducts) {
-      setProducts(JSON.parse(savedProducts));
-    } else {
-      setProducts(INITIAL_PRODUCTS);
-      localStorage.setItem('electro_products', JSON.stringify(INITIAL_PRODUCTS));
-    }
-
+  
     if (savedRepairs) {
       setRepairRequests(JSON.parse(savedRepairs));
     } else {
       setRepairRequests(INITIAL_REPAIR_REQUESTS);
-      localStorage.setItem('electro_repairs', JSON.stringify(INITIAL_REPAIR_REQUESTS));
+      localStorage.setItem(
+        'electro_repairs',
+        JSON.stringify(INITIAL_REPAIR_REQUESTS)
+      );
     }
-
+  
     if (savedAdminAuth === 'true') {
       setIsAdminLoggedIn(true);
     }
+  
+    return () => unsubscribe();
   }, []);
 
   // Sync utilities
@@ -80,21 +98,23 @@ export const App: React.FC = () => {
   };
 
   // Product Add / Delete Handlers
-  const handleAddProduct = (prod: Omit<Product, 'id'>) => {
-    const newId = `p${Date.now()}`;
-    const newProduct: Product = { ...prod, id: newId };
-    const updated = [newProduct, ...products];
-    saveProductsToDb(updated);
+  const handleAddProduct = async (prod: Omit<Product, 'id'>) => {
+    await addDoc(collection(db, 'products'), {
+      ...prod,
+    });
   };
 
-  const handleDeleteProduct = (id: string) => {
-    const updated = products.filter(p => p.id !== id);
-    saveProductsToDb(updated);
+  const handleDeleteProduct = async (id: string) => {
+    await deleteDoc(doc(db, 'products', id));
   };
 
-  const handleUpdateProductStock = (id: string, inStock: boolean) => {
-    const updated = products.map(p => p.id === id ? { ...p, stock: inStock } : p);
-    saveProductsToDb(updated);
+  const handleUpdateProductStock = async (
+    id: string,
+    inStock: boolean
+  ) => {
+    await updateDoc(doc(db, 'products', id), {
+      stock: inStock,
+    });
   };
 
   // Customer submit Repair request
